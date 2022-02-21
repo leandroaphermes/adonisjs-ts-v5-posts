@@ -1,6 +1,9 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Post from 'App/Models/Post'
 import CreatePostValidator from 'App/Validators/CreatePostValidator'
+
+import Post from 'App/Models/Post'
+import UpdatePostValidator from 'App/Validators/UpdatePostValidator'
+import NotFoundException from 'App/Exceptions/NotFoundException'
 
 export default class PostsController {
   public async index({ response }: HttpContextContract) {
@@ -10,18 +13,51 @@ export default class PostsController {
   }
 
   public async store({ request, response }: HttpContextContract) {
-    const data = await request.validate(CreatePostValidator)
+    const payload = await request.validate(CreatePostValidator)
 
-    const post = await Post.create(data)
+    const post = await Post.create(payload)
 
     await post.load('created')
+    await post.load('comments')
 
     response.created(post)
   }
 
-  public async show({}: HttpContextContract) {}
+  public async show({ params, response }: HttpContextContract) {
+    const post = await Post.query()
+      .where('id', params.id)
+      .preload('created')
+      .preload('comments')
+      .firstOrFail()
 
-  public async update({}: HttpContextContract) {}
+    response.ok(post)
+  }
 
-  public async destroy({}: HttpContextContract) {}
+  public async update({
+    request,
+    params,
+    response,
+  }: HttpContextContract) {
+    if (!params.id) throw new NotFoundException('Post não encontrado')
+
+    const payload = await request.validate(UpdatePostValidator)
+
+    const post = await Post.findOrFail(params.id)
+
+    post.merge(payload)
+
+    await post.save()
+
+    response.ok(post)
+  }
+
+  public async destroy({ params, response }: HttpContextContract) {
+    if (!params.id) throw new NotFoundException('Post não encontrado')
+
+    const post = await Post.findOrFail(params.id)
+
+    await post.delete()
+
+    response.noContent()
+  }
 }

@@ -6,8 +6,16 @@ export default class Comments extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('post_id').unsigned().references('posts.id')
-      table.integer('created_id').unsigned().references('users.id')
+      table
+        .integer('post_id')
+        .notNullable()
+        .unsigned()
+        .references('posts.id')
+      table
+        .integer('created_id')
+        .notNullable()
+        .unsigned()
+        .references('users.id')
       table.string('message').notNullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

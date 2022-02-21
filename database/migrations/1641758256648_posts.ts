@@ -6,7 +6,12 @@ export default class Posts extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('created_id').unsigned().references('users.id').onDelete('RESTRICT')
+      table
+        .integer('created_id')
+        .unsigned()
+        .references('users.id')
+        .notNullable()
+        .onDelete('RESTRICT')
       table.string('title').notNullable()
       table.string('slug').notNullable().unique()
       table.string('description').notNullable()

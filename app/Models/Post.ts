@@ -4,9 +4,12 @@ import {
   BelongsTo,
   belongsTo,
   column,
+  hasMany,
+  HasMany,
 } from '@ioc:Adonis/Lucid/Orm'
 
 import User from 'App/Models/User'
+import Comment from 'App/Models/Comment'
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -33,6 +36,14 @@ export default class Post extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @belongsTo(() => User, { foreignKey: 'created_id' })
+  @belongsTo(() => User, {
+    foreignKey: 'created_id',
+    onQuery: (query) => query.select(['id', 'name']),
+  })
   public created: BelongsTo<typeof User>
+
+  @hasMany(() => Comment, {
+    foreignKey: 'post_id',
+  })
+  public comments: HasMany<typeof Comment>
 }
