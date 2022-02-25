@@ -38,7 +38,7 @@ export default class PostsController {
     params,
     response,
   }: HttpContextContract) {
-    if (!params.id) throw new NotFoundException('Post não encontrado')
+    if (!params.id) throw new NotFoundException('Post not found')
 
     const payload = await request.validate(UpdatePostValidator)
 
@@ -52,7 +52,7 @@ export default class PostsController {
   }
 
   public async destroy({ params, response }: HttpContextContract) {
-    if (!params.id) throw new NotFoundException('Post não encontrado')
+    if (!params.id) throw new NotFoundException('Post not found')
 
     const post = await Post.findOrFail(params.id)
 
