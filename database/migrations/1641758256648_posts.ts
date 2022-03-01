@@ -16,6 +16,11 @@ export default class Posts extends BaseSchema {
       table.string('slug').notNullable().unique()
       table.string('description').notNullable()
       table.text('content').notNullable()
+      table
+        .enu('status', ['published', 'draft'])
+        .notNullable()
+        .defaultTo('draft')
+        .index()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

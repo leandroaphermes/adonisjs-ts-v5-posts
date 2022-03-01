@@ -1,6 +1,14 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  beforeSave,
+  column,
+  HasMany,
+  hasMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
+import Post from './Post'
+import { UserType } from 'Contracts/enums'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -23,11 +31,16 @@ export default class User extends BaseModel {
   }
 
   @column()
-  public type: 'visit' | 'creator'
+  public type: UserType
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => Post, {
+    foreignKey: 'created_id',
+  })
+  public posts: HasMany<typeof Post>
 }

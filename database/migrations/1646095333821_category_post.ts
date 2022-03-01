@@ -10,11 +10,13 @@ export default class CategoryPost extends BaseSchema {
         .notNullable()
         .unsigned()
         .references('categories.id')
+        .index()
       table
         .integer('post_id')
         .notNullable()
         .unsigned()
         .references('posts.id')
+        .index()
     })
   }
 

@@ -13,6 +13,7 @@ import {
 import User from 'App/Models/User'
 import Comment from 'App/Models/Comment'
 import Category from 'App/Models/Category'
+import { PostStatus } from 'Contracts/enums'
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -32,6 +33,9 @@ export default class Post extends BaseModel {
 
   @column()
   public content: string
+
+  @column()
+  public status: PostStatus
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
