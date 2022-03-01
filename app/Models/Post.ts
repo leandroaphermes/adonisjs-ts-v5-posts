@@ -3,6 +3,8 @@ import {
   BaseModel,
   BelongsTo,
   belongsTo,
+  ManyToMany,
+  manyToMany,
   column,
   hasMany,
   HasMany,
@@ -10,6 +12,7 @@ import {
 
 import User from 'App/Models/User'
 import Comment from 'App/Models/Comment'
+import Category from 'App/Models/Category'
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -46,4 +49,7 @@ export default class Post extends BaseModel {
     foreignKey: 'post_id',
   })
   public comments: HasMany<typeof Comment>
+
+  @manyToMany(() => Category)
+  public categories: ManyToMany<typeof Category>
 }

@@ -7,7 +7,9 @@ import NotFoundException from 'App/Exceptions/NotFoundException'
 
 export default class PostsController {
   public async index({ response }: HttpContextContract) {
-    const posts = await Post.all()
+    const posts = await Post.query()
+      .preload('categories')
+      .preload('created')
 
     response.ok(posts)
   }
@@ -19,6 +21,7 @@ export default class PostsController {
 
     await post.load('created')
     await post.load('comments')
+    await post.load('categories')
 
     response.created(post)
   }
@@ -44,9 +47,7 @@ export default class PostsController {
 
     const post = await Post.findOrFail(params.id)
 
-    post.merge(payload)
-
-    await post.save()
+    await post.merge(payload).save()
 
     response.ok(post)
   }

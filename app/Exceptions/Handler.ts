@@ -26,9 +26,6 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     /**
      * Self handle the validation exception
      */
-    if (error.code === 'E_VALIDATION_FAILURE') {
-      return ctx.response.status(422).send({ message: error.message })
-    }
     if (error.code === 'E_ROW_NOT_FOUND') {
       return ctx.response.status(404).send({ message: error.message })
     }

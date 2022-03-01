@@ -20,3 +20,5 @@
 
 import './users'
 import './posts'
+import './categories'
+import './comments'

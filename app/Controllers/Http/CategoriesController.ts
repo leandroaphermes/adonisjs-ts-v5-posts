@@ -1,17 +1,54 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-
+import NotFoundException from 'App/Exceptions/NotFoundException'
+import Category from 'App/Models/Category'
+import CreateCategoryValidator from 'App/Validators/CreateCategoryValidator'
+import UpdateCategoryValidator from 'App/Validators/UpdateCategoryValidator'
 export default class CategoriesController {
-  public async index({}: HttpContextContract) {}
+  public async index({ response }: HttpContextContract) {
+    const categories = await Category.all()
 
-  public async create({}: HttpContextContract) {}
+    response.ok(categories)
+  }
 
-  public async store({}: HttpContextContract) {}
+  public async create({ request, response }: HttpContextContract) {
+    const payload = await request.validate(CreateCategoryValidator)
 
-  public async show({}: HttpContextContract) {}
+    const category = await Category.create(payload)
 
-  public async edit({}: HttpContextContract) {}
+    response.created(category)
+  }
 
-  public async update({}: HttpContextContract) {}
+  public async show({ params, response }: HttpContextContract) {
+    const category = await Category.query()
+      .where('id', params.id)
+      .firstOrFail()
 
-  public async destroy({}: HttpContextContract) {}
+    response.ok(category)
+  }
+
+  public async update({
+    request,
+    params,
+    response,
+  }: HttpContextContract) {
+    if (!params.id) throw new NotFoundException('Category not found')
+
+    const payload = await request.validate(UpdateCategoryValidator)
+
+    const category = await Category.findOrFail(params.id)
+
+    await category.merge(payload).save()
+
+    response.ok(category)
+  }
+
+  public async destroy({ params, response }: HttpContextContract) {
+    if (!params.id) throw new NotFoundException('Category not found')
+
+    const category = await Category.findOrFail(params.id)
+
+    await category.delete()
+
+    response.noContent()
+  }
 }
