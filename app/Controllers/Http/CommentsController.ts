@@ -1,9 +1,11 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+
 import NotFoundException from 'App/Exceptions/NotFoundException'
 
-import Comment from 'App/Models/Comment'
 import CreateCommentValidator from 'App/Validators/CreateCommentValidator'
 import UpdateCommentValidator from 'App/Validators/UpdateCommentValidator'
+
+import Comment from 'App/Models/Comment'
 
 export default class CommentsController {
   public async index({ response }: HttpContextContract) {

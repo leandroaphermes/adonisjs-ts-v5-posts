@@ -28,6 +28,7 @@ export default class UpdatePostValidator {
       rules.minLength(4),
       rules.maxLength(100),
     ]),
+    slug: schema.string({ trim: true }, [rules.toLowerCase()]),
     description: schema.string({ trim: true }, [
       rules.minLength(4),
       rules.maxLength(100),

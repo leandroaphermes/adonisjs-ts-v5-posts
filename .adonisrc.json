@@ -13,11 +13,23 @@
     "Database": "database",
     "Contracts": "contracts"
   },
-  "preloads": ["./start/events", "./start/routes", "./start/kernel"],
+  "preloads": [
+    "./start/events",
+    "./start/routes",
+    "./start/kernel",
+    {
+      "file": "./start/extendValidator",
+      "environment": [
+        "web"
+      ]
+    }
+  ],
   "providers": [
     "./providers/AppProvider",
     "@adonisjs/core",
     "@adonisjs/lucid"
   ],
-  "aceProviders": ["@adonisjs/repl"]
+  "aceProviders": [
+    "@adonisjs/repl"
+  ]
 }

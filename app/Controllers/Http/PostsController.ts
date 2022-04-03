@@ -1,9 +1,14 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+
+import NotFoundException from 'App/Exceptions/NotFoundException'
+
 import CreatePostValidator from 'App/Validators/CreatePostValidator'
+import UpdatePostValidator from 'App/Validators/UpdatePostValidator'
 
 import Post from 'App/Models/Post'
-import UpdatePostValidator from 'App/Validators/UpdatePostValidator'
-import NotFoundException from 'App/Exceptions/NotFoundException'
+import UpdatePostStatusValidator from 'App/Validators/UpdatePostStatusValidator'
+import { PostStatus } from 'Contracts/enums'
+import { DateTime } from 'luxon'
 
 export default class PostsController {
   public async index({ response }: HttpContextContract) {
@@ -60,5 +65,33 @@ export default class PostsController {
     await post.delete()
 
     response.noContent()
+  }
+
+  public async updateStatus({
+    request,
+    params,
+    response,
+  }: HttpContextContract) {
+    if (!params.id) throw new NotFoundException('Post not found')
+
+    const payload = await request.validate(UpdatePostStatusValidator)
+
+    const post = await Post.findOrFail(params.id)
+
+    const publishedAt = [
+      PostStatus.PUBLIC,
+      PostStatus.PRIVATE,
+    ].includes(payload.status)
+      ? DateTime.local()
+      : undefined
+
+    await post
+      .merge({
+        ...payload,
+        publishedAt: publishedAt,
+      })
+      .save()
+
+    response.ok(post)
   }
 }

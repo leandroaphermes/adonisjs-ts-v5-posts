@@ -1,5 +1,7 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
+import { PostStatus } from 'Contracts/enums'
+
 export default class Posts extends BaseSchema {
   protected tableName = 'posts'
 
@@ -17,10 +19,11 @@ export default class Posts extends BaseSchema {
       table.string('description').notNullable()
       table.text('content').notNullable()
       table
-        .enu('status', ['published', 'draft'])
+        .enu('status', Object.values(PostStatus))
         .notNullable()
         .defaultTo('draft')
         .index()
+      table.timestamp('published_at', { useTz: true }).nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

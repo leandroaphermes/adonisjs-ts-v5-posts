@@ -28,7 +28,9 @@ export default class Post extends BaseModel {
   @column()
   public description: string
 
-  @column()
+  @column({
+    serialize: (value: string) => value.toLocaleLowerCase(),
+  })
   public slug: string
 
   @column()
@@ -36,6 +38,9 @@ export default class Post extends BaseModel {
 
   @column()
   public status: PostStatus
+
+  @column.dateTime()
+  public publishedAt: DateTime
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

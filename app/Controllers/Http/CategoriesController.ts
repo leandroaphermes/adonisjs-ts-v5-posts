@@ -1,8 +1,12 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+
 import NotFoundException from 'App/Exceptions/NotFoundException'
-import Category from 'App/Models/Category'
+
 import CreateCategoryValidator from 'App/Validators/CreateCategoryValidator'
 import UpdateCategoryValidator from 'App/Validators/UpdateCategoryValidator'
+
+import Category from 'App/Models/Category'
+
 export default class CategoriesController {
   public async index({ response }: HttpContextContract) {
     const categories = await Category.all()
@@ -10,7 +14,7 @@ export default class CategoriesController {
     response.ok(categories)
   }
 
-  public async create({ request, response }: HttpContextContract) {
+  public async store({ request, response }: HttpContextContract) {
     const payload = await request.validate(CreateCategoryValidator)
 
     const category = await Category.create(payload)

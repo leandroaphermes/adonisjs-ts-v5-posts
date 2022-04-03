@@ -1,7 +1,8 @@
-import { schema, rules } from '@ioc:Adonis/Core/Validator'
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema } from '@ioc:Adonis/Core/Validator'
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { PostStatus } from 'Contracts/enums'
 
-export default class CreatePostValidator {
+export default class UpdatePostStatusValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,20 +25,7 @@ export default class CreatePostValidator {
    *    ```
    */
   public schema = schema.create({
-    created_id: schema.number(),
-    title: schema.string({ trim: true }, [
-      rules.minLength(4),
-      rules.maxLength(100),
-    ]),
-    description: schema.string({ trim: true }, [
-      rules.minLength(4),
-      rules.maxLength(100),
-    ]),
-    slug: schema.string({ trim: true }, [rules.toLowerCase()]),
-    content: schema.string({ trim: true }, [
-      rules.minLength(4),
-      rules.maxLength(2048),
-    ]),
+    status: schema.enum(Object.values(PostStatus)),
   })
 
   /**
